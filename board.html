@@ -1,27 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>게시판 목록</title>
 </head>
 <body>
-  <h1>게시판</h1>
-  <a href="write.html">글쓰기</a>
+  <h1>📋 게시글 목록</h1>
   <ul id="postList"></ul>
+  <a href="write.html">✏️ 새 글 작성</a>
 
   <script>
-    const postList = document.getElementById("postList");
-    const posts = JSON.parse(localStorage.getItem("boardPosts")) || [];
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const postList = document.getElementById('postList');
 
     posts.forEach((post, index) => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <a href="view.html?index=${index}">${post.title}</a>
-      `;
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="view.html?id=${index}">${post.title}</a>`;
       postList.appendChild(li);
     });
   </script>
 </body>
 </html>
-
-

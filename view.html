@@ -1,40 +1,26 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>게시글 보기</title>
+  <title>게시물 상세보기</title>
 </head>
 <body>
-  <h1 id="title">제목</h1>
-  <p id="content">내용</p>
-  <a id="editBtn">✏️ 수정</a> |
-  <a id="deleteBtn">🗑️ 삭제</a> |
-  <a href="board.html">← 목록</a>
+  <h2 id="title">제목 불러오는 중...</h2>
+  <p id="content">내용 불러오는 중...</p>
 
   <script>
-    const titleEl = document.getElementById("title");
-    const contentEl = document.getElementById("content");
-    const urlParams = new URLSearchParams(location.search);
-    const index = urlParams.get("index");
-    const posts = JSON.parse(localStorage.getItem("boardPosts")) || [];
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get('id');
 
-    if (index && posts[index]) {
-      const post = posts[index];
-      titleEl.textContent = post.title;
-      contentEl.textContent = post.content;
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
 
-      document.getElementById("editBtn").href = `write.html?index=${index}`;
-      document.getElementById("deleteBtn").addEventListener("click", () => {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          posts.splice(index, 1);
-          localStorage.setItem("boardPosts", JSON.stringify(posts));
-          location.href = "board.html";
-        }
-      });
+    if (posts[postId]) {
+      document.getElementById("title").textContent = posts[postId].title;
+      document.getElementById("content").textContent = posts[postId].content;
     } else {
-      document.body.innerHTML = "<p>게시글을 찾을 수 없습니다.</p><a href='board.html'>← 목록으로</a>";
+      document.getElementById("title").textContent = "게시물을 찾을 수 없습니다.";
+      document.getElementById("content").textContent = "";
     }
   </script>
 </body>
 </html>
-

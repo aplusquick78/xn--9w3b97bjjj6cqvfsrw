@@ -1,49 +1,35 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>글쓰기</title>
+  <title>글 작성</title>
 </head>
 <body>
-  <h1 id="pageTitle">글쓰기</h1>
-  <input type="text" id="title" placeholder="제목"><br>
-  <textarea id="content" placeholder="내용" rows="5" cols="30"></textarea><br>
-  <button id="saveBtn">저장</button>
-  <a href="board.html">← 목록</a>
+  <h1>✍️ 글 작성</h1>
+  <form id="writeForm">
+    <input type="text" id="title" placeholder="제목" required><br><br>
+    <textarea id="content" placeholder="내용" rows="5" required></textarea><br><br>
+    <button type="submit">등록</button>
+  </form>
 
   <script>
-    const titleInput = document.getElementById("title");
-    const contentInput = document.getElementById("content");
-    const saveBtn = document.getElementById("saveBtn");
-    const urlParams = new URLSearchParams(location.search);
-    const index = urlParams.get("index");
-    const posts = JSON.parse(localStorage.getItem("boardPosts")) || [];
+    const form = document.getElementById('writeForm');
 
-    if (index !== null && posts[index]) {
-      document.getElementById("pageTitle").textContent = "글 수정";
-      titleInput.value = posts[index].title;
-      contentInput.value = posts[index].content;
-    }
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-    saveBtn.addEventListener("click", () => {
-      const title = titleInput.value.trim();
-      const content = contentInput.value.trim();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
 
-      if (!title || !content) {
-        alert("제목과 내용을 모두 입력하세요.");
-        return;
-      }
+      const newPost = { title, content };
 
-      if (index !== null && posts[index]) {
-        posts[index] = { title, content };
-      } else {
-        posts.push({ title, content });
-      }
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      posts.push(newPost);
+      localStorage.setItem('posts', JSON.stringify(posts));
 
-      localStorage.setItem("boardPosts", JSON.stringify(posts));
-      location.href = "board.html";
+      alert('게시글이 등록되었습니다.');
+      window.location.href = 'board.html';
     });
   </script>
 </body>
 </html>
-
