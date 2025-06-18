@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 보기</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 { color: #333; }
+    .meta { color: #777; font-size: 14px; margin-bottom: 10px; }
+    .content { white-space: pre-wrap; margin-top: 20px; }
+    a.button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    a.button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="title">제목</h2>
+    <div class="meta" id="date">작성일</div>
+    <div class="content" id="content">내용</div>
+    <a href="board.html" class="button">← 목록으로</a>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get("index");
+    const posts = JSON.parse(localStorage.getItem("boardPosts")) || [];
+
+    if (index === null || !posts[index]) {
+      document.querySelector(".container").innerHTML = "<p>게시글이 존재하지 않습니다.</p><a href='board.html' class='button'>← 목록으로</a>";
+    } else {
+      const post = posts[index];
+      document.getElementById("title").innerText = post.title;
+      document.getElementById("date").innerText = post.date;
+      document.getElementById("content").innerText = post.content;
+    }
+  </script>
+</body>
+</html>
