@@ -1,0 +1,52 @@
+<!-- edit.html (글 수정 페이지) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>글 수정</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>✏️ 글 수정</h1>
+  <input id="title" placeholder="제목" style="width:100%; padding:10px;"><br><br>
+  <textarea id="content" rows="10" style="width:100%; padding:10px;" placeholder="내용"></textarea><br><br>
+  <button onclick="updatePost()">수정</button>
+  <a href="index.html">[목록]</a>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    const titleField = document.getElementById("title");
+    const contentField = document.getElementById("content");
+
+    if (!id) {
+      document.body.innerHTML = "<p>잘못된 접근입니다.</p>";
+    } else {
+      db.collection("posts").doc(id).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          titleField.value = data.title;
+          contentField.value = data.content;
+        } else {
+          document.body.innerHTML = "<p>게시물을 찾을 수 없습니다.</p>";
+        }
+      });
+    }
+
+    function updatePost() {
+      db.collection("posts").doc(id).update({
+        title: titleField.value,
+        content: contentField.value
+      }).then(() => {
+        alert("수정 완료");
+        location.href = `view.html?id=${id}`;
+      });
+    }
+  </script>
+</body>
+</html>

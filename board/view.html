@@ -1,0 +1,50 @@
+<!-- view.html (상세보기 페이지) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>상세보기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title">제목</h1>
+  <p id="content">내용</p>
+  <a href="index.html">[목록]</a>
+  <a id="editLink">[수정]</a>
+  <a href="#" onclick="deletePost()">[삭제]</a>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+
+    if (!id) {
+      document.body.innerHTML = "<p>잘못된 접근입니다.</p>";
+    } else {
+      db.collection("posts").doc(id).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          document.getElementById("title").textContent = data.title;
+          document.getElementById("content").textContent = data.content;
+          document.getElementById("editLink").href = `edit.html?id=${id}`;
+        } else {
+          document.body.innerHTML = "<p>게시물을 찾을 수 없습니다.</p>";
+        }
+      });
+    }
+
+    function deletePost() {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        db.collection("posts").doc(id).delete().then(() => {
+          alert("삭제 완료");
+          location.href = "index.html";
+        });
+      }
+    }
+  </script>
+</body>
+</html>

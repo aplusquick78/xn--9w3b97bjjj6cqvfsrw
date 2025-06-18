@@ -1,0 +1,40 @@
+<!-- write.html (글쓰기 페이지) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>글쓰기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>✏️ 글쓰기</h1>
+  <input id="title" placeholder="제목" style="width:100%; padding:10px;"><br><br>
+  <textarea id="content" placeholder="내용" rows="10" style="width:100%; padding:10px;"></textarea><br><br>
+  <button onclick="savePost()">등록</button>
+  <a href="index.html">[목록]</a>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    function savePost() {
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+      if (!title || !content) {
+        alert("제목과 내용을 모두 입력해주세요.");
+        return;
+      }
+      db.collection("posts").add({
+        title: title,
+        content: content,
+        created: new Date()
+      }).then(() => {
+        alert("등록 완료");
+        location.href = "index.html";
+      });
+    }
+  </script>
+</body>
+</html>

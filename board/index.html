@@ -1,0 +1,31 @@
+<!-- index.html (게시판 목록) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>게시판</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>📋 게시판</h1>
+  <a href="write.html">[글쓰기]</a>
+  <ul id="postList"></ul>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    db.collection("posts").orderBy("created", "desc").get().then(snapshot => {
+      const list = document.getElementById("postList");
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="view.html?id=${doc.id}">${data.title}</a>`;
+        list.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
