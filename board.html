@@ -2,6 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <script>
+  console.log("JS 로딩 확인");
+  const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  console.log("posts:", posts);
+  // 이하 기존 코드...
+</script>
+
   <title>게시판 목록</title>
 </head>
 <body>
