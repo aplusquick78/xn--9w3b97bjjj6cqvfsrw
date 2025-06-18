@@ -1,26 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>게시물 상세보기</title>
+<meta charset="UTF-8" />
+<title>게시물 상세보기</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 10px; }
+</style>
 </head>
 <body>
-  <h2 id="title">제목 불러오는 중...</h2>
-  <p id="content">내용 불러오는 중...</p>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const postId = params.get('id');
+<h1 id="post-title">로딩 중...</h1>
+<p><a href="board.html">목록으로</a></p>
+<div id="post-content" style="white-space: pre-wrap; border-top:1px solid #ccc; padding-top:10px;"></div>
 
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD0xTVF_VRyLHr0N2rCul6S9ZpZgvndvD8",
+  authDomain: "ansan-8d9df.firebaseapp.com",
+  projectId: "ansan-8d9df",
+  storageBucket: "ansan-8d9df.firebasestorage.app",
+  messagingSenderId: "909462222806",
+  appId: "1:909462222806:web:5e1a5a8b282ea336a1d677",
+  measurementId: "G-M5YGHLVJ4S"
+};
 
-    if (posts[postId]) {
-      document.getElementById("title").textContent = posts[postId].title;
-      document.getElementById("content").textContent = posts[postId].content;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+
+if(!id) {
+  document.getElementById('post-title').textContent = '잘못된 접근입니다.';
+} else {
+  db.collection('posts').doc(id).get().then(doc => {
+    if(!doc.exists) {
+      document.getElementById('post-title').textContent = '게시물을 찾을 수 없습니다.';
+      document.getElementById('post-content').textContent = '';
     } else {
-      document.getElementById("title").textContent = "게시물을 찾을 수 없습니다.";
-      document.getElementById("content").textContent = "";
+      const data = doc.data();
+      document.getElementById('post-title').textContent = data.title;
+      document.getElementById('post-content').textContent = data.content;
     }
-  </script>
+  });
+}
+</script>
+
 </body>
 </html>
+
