@@ -3,52 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>게시글 보기</title>
-  <style>
-    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h2 { color: #333; }
-    .meta { color: #777; font-size: 14px; margin-bottom: 10px; }
-    .content { white-space: pre-wrap; margin-top: 20px; }
-    a.button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-    a.button:hover { background: #0056b3; }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="title">제목</h2>
-    <div class="meta" id="date">작성일</div>
-    <div class="content" id="content">내용</div>
-    <a href="board.html" class="button">← 목록으로</a>
-  </div>
+  <h1 id="title">제목</h1>
+  <p id="content">내용</p>
+  <a id="editBtn">✏️ 수정</a> |
+  <a id="deleteBtn">🗑️ 삭제</a> |
+  <a href="board.html">← 목록</a>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
+    const titleEl = document.getElementById("title");
+    const contentEl = document.getElementById("content");
+    const urlParams = new URLSearchParams(location.search);
     const index = urlParams.get("index");
     const posts = JSON.parse(localStorage.getItem("boardPosts")) || [];
 
-    if (index === null || !posts[index]) {
-      document.querySelector(".container").innerHTML = "<p>게시글이 존재하지 않습니다.</p><a href='board.html' class='button'>← 목록으로</a>";
-    } else {
+    if (index && posts[index]) {
       const post = posts[index];
-      document.getElementById("title").innerText = post.title;
-      document.getElementById("date").innerText = post.date;
-      document.getElementById("content").innerText = post.content;
+      titleEl.textContent = post.title;
+      contentEl.textContent = post.content;
+
+      document.getElementById("editBtn").href = `write.html?index=${index}`;
+      document.getElementById("deleteBtn").addEventListener("click", () => {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          posts.splice(index, 1);
+          localStorage.setItem("boardPosts", JSON.stringify(posts));
+          location.href = "board.html";
+        }
+      });
+    } else {
+      document.body.innerHTML = "<p>게시글을 찾을 수 없습니다.</p><a href='board.html'>← 목록으로</a>";
     }
   </script>
 </body>
 </html>
+
